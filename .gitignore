@@ -1,0 +1,9 @@
+.terraform
+.terraform.lock.hcl
+shared/lib/.venv
+handlers/get_questions/.venv
+handlers/get_questions/.pytest_cache
+handlers/get_questions/.pip_cache
+terraform.tfstate
+terraform.tfstate.backup
+app.zip
