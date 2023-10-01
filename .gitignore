@@ -4,6 +4,15 @@ shared/lib/.venv
 handlers/get_questions/.venv
 handlers/get_questions/.pytest_cache
 handlers/get_questions/.pip_cache
+handlers/get_questions/package/*
+handlers/get_tags/.venv
+handlers/get_tags/.pytest_cache
+handlers/get_tags/.pip_cache
+handlers/get_tags/package/*
 terraform.tfstate
 terraform.tfstate.backup
+terraform_app/zip_files/get_tags/*
+terraform_app/zip_files/get_questions/*
 app.zip
+notes.txt
+terraform_app/plan.out

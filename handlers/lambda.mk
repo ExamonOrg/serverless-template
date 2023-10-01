@@ -3,7 +3,7 @@ package_dir := package
 export PYTHONPATH := .
 
 # This will build the lambda handler and create a zip file
-build: package zip
+build: clean package zip
 .PHONY: build
 
 tests:
@@ -21,5 +21,13 @@ package:
 .PHONY: package
 
 zip:
-	zip -r --exclude requirements.\* --recurse-paths app.zip package/*
+	zip -r --exclude requirements.\* --recurse-paths ${package_name} package/*
 .PHONY: zip
+
+clean:
+	rm -rf ${package_dir} && \
+	rm -rf ./.pip_cache && \
+	rm -rf ./.pytest_cache && \
+	rm -rf ./.venv && \
+	rm -rf ./__pycache__
+.PHONY: clean
