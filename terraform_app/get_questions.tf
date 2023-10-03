@@ -13,14 +13,12 @@ module "get_questions_lambda" {
 }
 
 module "api_gateway_v2_get_questions" {
-  source          = "./modules/api_gateway_v2"
-  method          = "GET"
-  path            = "/questions"
-  stage_name      = "staging"
-  integration_uri = module.get_questions_lambda.invoke_arn
-  function_name   = module.get_questions_lambda.function_name
-}
-
-output "invoke_url_get_questions" {
-  value = module.api_gateway_v2_get_questions.invoke_url
+  source                    = "./modules/restful_endpoint"
+  method                    = "GET"
+  path                      = "/questions"
+  stage_name                = "staging"
+  integration_uri           = module.get_questions_lambda.invoke_arn
+  function_name             = module.get_questions_lambda.function_name
+  api_gateway_id            = aws_apigatewayv2_api.api_gw.id
+  api_gateway_execution_arn = aws_apigatewayv2_api.api_gw.execution_arn
 }
