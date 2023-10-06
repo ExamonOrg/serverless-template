@@ -26,7 +26,7 @@ resource "aws_cloudwatch_log_group" "api_gw_cloud_watch_group" {
 }
 
 resource "aws_lambda_permission" "api_gw" {
-  statement_id  = "AllowExecutionFromAPIGateway"
+  statement_id  = "allow_execution_from_api_gateway_${var.function_name}"
   action        = "lambda:InvokeFunction"
   function_name = var.function_name
   principal     = "apigateway.amazonaws.com"

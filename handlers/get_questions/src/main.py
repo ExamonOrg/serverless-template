@@ -37,8 +37,8 @@ def lambda_handler(event: dict, context: LambdaContext):
         return {
             "statusCode": 200,
             "headers": {"content-type": "application/json"},
-            "body": json.dumps({"question": "1"}),
+            "body": json.dumps({"message": "question 1"}),
         }
     except Exception as e:
-        logging.error(e)
-        return {"statusCode": 400, "body": {":(": "1"}}
+        Logger.error(e)
+        return {"code": 400, "message": "Error"}
