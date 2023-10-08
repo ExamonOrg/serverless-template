@@ -6,7 +6,8 @@ terraform.tfstate*
 terraform_app/zip_files/.*
 app.zip
 notes.txt
-terraform_app/plan.out
 handlers/get_questions/get_questions.zip
 handlers/get_tags/get_tags.zip
-terraform_app/zip_files/*
+terraform/lambdas/plan.out
+terraform/lambdas/zip_files/*.zip
+terraform/rest_open_api/plan.out
