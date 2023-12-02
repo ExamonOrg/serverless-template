@@ -1,0 +1,7 @@
+.idea
+.pip_cache
+.venv
+dist
+package
+src
+*.zip

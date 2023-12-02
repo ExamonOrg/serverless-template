@@ -1,23 +1,18 @@
 {
   "openapi": "3.0.3",
   "info": {
-    "title": "Examon API",
-    "version": "1.0.0"
+    "title": "My API",
+    "version": "${version}"
   },
   "servers": [
     {
-      "url": "http://api.examon.org/"
+      "url": "${fqdn}"
     }
   ],
   "paths": {
-    "/hello": {
+    "/pet/{id}": {
       "get": {
-        "operationId": "getHello",
-        "security": [
-          {
-            "ApiKeyAuth": []
-          }
-        ],
+        "operationId": "getPet",
         "responses": {
           "200": {
             "description": "OK"
@@ -26,23 +21,56 @@
         "x-amazon-apigateway-integration": {
           "type": "aws_proxy",
           "httpMethod": "POST",
-          "uri": "arn:aws:apigateway:eu-west-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-1:478119378221:function:hello/invocations",
+          "uri": "arn:aws:apigateway:eu-west-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-1:478119378221:function:petshop_get_pet/invocations",
           "passthroughBehavior": "never"
+        }
+      },
+      "post": {
+        "operationId": "createPet",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
         },
-        "x-amazon-apigateway-auth": {
-          "type": "none"
+        "x-amazon-apigateway-integration": {
+          "type": "aws_proxy",
+          "httpMethod": "POST",
+          "uri": "arn:aws:apigateway:eu-west-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-1:478119378221:function:petshop_create_pet/invocations",
+          "passthroughBehavior": "never"
+        }
+      },
+      "put": {
+        "operationId": "updatePet",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
         },
-        "x-amazon-apigateway-api-key-source": "HEADER"
+        "x-amazon-apigateway-integration": {
+          "type": "aws_proxy",
+          "httpMethod": "POST",
+          "uri": "arn:aws:apigateway:eu-west-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-1:478119378221:function:petshop_update_pet/invocations",
+          "passthroughBehavior": "never"
+        }
+      },
+      "delete": {
+        "operationId": "deletePet",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "x-amazon-apigateway-integration": {
+          "type": "aws_proxy",
+          "httpMethod": "POST",
+          "uri": "arn:aws:apigateway:eu-west-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-1:478119378221:function:petshop_delete_pet/invocations",
+          "passthroughBehavior": "never"
+        }
       }
     },
-    "/questions": {
+    "/pets": {
       "get": {
-        "operationId": "getQuestions",
-        "security": [
-          {
-            "ApiKeyAuth": []
-          }
-        ],
+        "operationId": "getPets",
         "responses": {
           "200": {
             "description": "OK"
@@ -51,24 +79,14 @@
         "x-amazon-apigateway-integration": {
           "type": "aws_proxy",
           "httpMethod": "POST",
-          "uri": "arn:aws:apigateway:eu-west-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-1:478119378221:function:examon_get_questions/invocations",
+          "uri": "arn:aws:apigateway:eu-west-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-1:478119378221:function:petshop_index_pet/invocations",
           "passthroughBehavior": "never"
-        },
-        "x-amazon-apigateway-auth": {
-          "type": "none"
-        },
-        "x-amazon-apigateway-api-key-source": "HEADER"
+        }
       }
     }
   },
   "components": {
     "schemas": {},
-    "securitySchemes": {
-      "ApiKeyAuth": {
-        "type": "apiKey",
-        "name": "x-api-key",
-        "in": "header"
-      }
-    }
+    "securitySchemes": {}
   }
 }
