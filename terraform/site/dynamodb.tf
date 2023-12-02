@@ -1,5 +1,5 @@
 module "my_dynamodb" {
-  source              = "../../../tf-modules/dynamodb"
+  source              = "git::https://github.com/ExamonOrg/tf-modules.git//dynamodb?ref=v1"
   table_name          = "pets"
   hash_key            = "pet_uuid"
   enable_streams      = true
