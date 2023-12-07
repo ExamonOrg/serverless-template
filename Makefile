@@ -1,6 +1,8 @@
 s3_bucket := examon-lambdas
 project := petshop
 package_dir := package
+region := eu-west-1
+account_id := 478119378221
 default: help ;
 
 #########################################
@@ -61,6 +63,28 @@ fn_upload:
 	--s3-bucket ${s3_bucket} --s3-key "${name}_${resource}.zip" > /dev/null
 .PHONY: fn_upload
 
+fn_layer_zip:
+	cd "handlers/${resource}/${name}" && \
+	poetry export -f requirements.txt --output requirements.txt && \
+	mkdir -p python && \
+    pip install -r requirements.txt -t python/ && \
+    zip -r ${name}_${resource}_layer.zip python && \
+	rm -rf python && \
+	rm -rf requirements.txt
+.PHONY: fn_zip
+
+fn_layer_upload:
+	cd "handlers/${resource}/${name}" && \
+	aws s3 cp "${name}_${resource}_layer.zip" s3://${s3_bucket} && \
+	aws lambda publish-layer-version --layer-name "${project}_${name}_${resource}_layer" \
+	--content S3Bucket=${s3_bucket},S3Key="${name}_${resource}_layer.zip" > /dev/null
+.PHONY: fn_upload
+
+fn_layer_apply:
+	LATEST_VERSION=$$(aws lambda list-layer-versions --layer-name "${project}_${name}_${resource}_layer" --query 'LayerVersions[0].Version' --output text) && \
+	aws lambda update-function-configuration --function-name "${project}_${name}_${resource}" \
+    --layers "arn:aws:lambda:${region}:${account_id}:layer:${project}_${name}_${resource}_layer:$${LATEST_VERSION}" > /dev/null
+
 fn_zip:
 	cd "handlers/${resource}/${name}" && \
 	cd package && \
@@ -68,6 +92,21 @@ fn_zip:
 	cd .. && \
 	mv "${package_dir}/${name}_${resource}.zip" .
 .PHONY: fn_zip
+
+fn_zip_mini:
+	cd "handlers/${resource}/${name}" && \
+	cd package && \
+	zip -r -D ${name}_${resource}_mini.zip src && \
+	cd .. && \
+	mv "${package_dir}/${name}_${resource}_mini.zip" .
+.PHONY: fn_zip
+
+fn_upload_mini:
+	cd "handlers/${resource}/${name}" && \
+	aws s3 cp "${name}_${resource}_mini.zip" s3://${s3_bucket} && \
+	aws lambda update-function-code --function-name "${project}_${name}_${resource}" \
+	--s3-bucket ${s3_bucket} --s3-key "${name}_${resource}_mini.zip" > /dev/null
+.PHONY: fn_upload
 
 fn_test:
 	cd "handlers/${resource}/${name}" && \
@@ -84,17 +123,20 @@ fn_clean:
 	rm -rf ./__pycache__
 
 fn_deploy: fn_build fn_zip fn_upload
-.PHONY: fn_all
+.PHONY: fn_deploy
+
+fn_deploy_mini: fn_build fn_zip_mini fn_layer_zip fn_layer_upload fn_upload_mini fn_layer_apply
+.PHONY: fn_deploy_mini
 
 #########################################
 # Aggregate
 #########################################
 
 fn_deploy_all:
-	$(MAKE) fn_deploy resource=pet name=create
-	$(MAKE) fn_deploy resource=pet name=delete
-	$(MAKE) fn_deploy resource=pet name=get
-	$(MAKE) fn_deploy resource=pet name=index
-	$(MAKE) fn_deploy resource=pet name=listener
-	$(MAKE) fn_deploy resource=pet name=update
+	$(MAKE) fn_deploy_mini resource=pet name=create
+	$(MAKE) fn_deploy_mini resource=pet name=delete
+	$(MAKE) fn_deploy_mini resource=pet name=get
+	$(MAKE) fn_deploy_mini resource=pet name=index
+	$(MAKE) fn_deploy_mini resource=pet name=listener
+	$(MAKE) fn_deploy_mini resource=pet name=update
 .PHONY: fn_deploy_all

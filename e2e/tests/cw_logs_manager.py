@@ -32,7 +32,7 @@ class CWLogsClient:
         for log_stream in stream_response["logStreams"]:
             latest_log_stream_name = log_stream["logStreamName"]
 
-            event_response = cw_logs_client.get_log_events(
+            event_response = self.cw_logs_client.get_log_events(
                 logGroupName=name,
                 logStreamName=latest_log_stream_name,
                 startTime=0,

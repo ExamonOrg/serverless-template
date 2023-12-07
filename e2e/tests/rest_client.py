@@ -2,8 +2,7 @@ import requests
 
 
 class RestClient:
-    def __init__(self, api_key=None, url=None):
-        self.api_key = api_key
+    def __init__(self, url=None):
         self.invoke_url = url
 
     def get_pets(self):
@@ -11,7 +10,7 @@ class RestClient:
         return response
 
     def headers(self):
-        return {'x-api-key': self.api_key}
+        return {}
 
     def get_pet(self, uuid):
         response = requests.get(f'{self.invoke_url}v1/pet/{uuid}', headers=self.headers())

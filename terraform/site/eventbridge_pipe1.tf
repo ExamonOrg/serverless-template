@@ -3,7 +3,6 @@ data "aws_caller_identity" "main" {}
 resource "aws_iam_role" "example" {
   assume_role_policy = jsonencode({
     Version     = "2012-10-17"
-    eventSource = ["aws:sqs"]
     Statement = {
       Effect    = "Allow"
       Action    = "sts:AssumeRole"

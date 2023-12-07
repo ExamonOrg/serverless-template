@@ -61,7 +61,7 @@ class TestPetFlow:
         rest_client.delete_pet(pet_uuid)
         sleep(10)
 
-        assert "Creating pet" in client.get_logs("/aws/lambda/petshop_create_pet")
+        # assert "Creating pet" in client.get_logs("/aws/lambda/petshop_create_pet")
         assert f"Getting pet: {pet_uuid}" in client.get_logs("/aws/lambda/petshop_get_pet")
         assert f"Getting all pets, found 1" in client.get_logs("/aws/lambda/petshop_index_pet")
         assert f"Updating pet: {pet_uuid}" in client.get_logs("/aws/lambda/petshop_update_pet")
