@@ -8,12 +8,6 @@ jobs:
   terraform:
     name: 'Terraform'
     runs-on: ubuntu-latest
-    container:
-      image: ubuntu-latest
-      options: --entrypoint /bin/bash
-      volumes:
-        - /usr/bin/docker:/usr/bin/docker
-        - /var/run/docker.sock:/var/run/docker.sock
     steps:
       - name: 'Checkout'
         uses: actions/checkout@v2
@@ -25,8 +19,8 @@ jobs:
 
       - name: 'Install AWS CLI'
         run: |
-          apt-get update
-          apt-get install -y awscli
+          sudo apt-get update
+          sudo apt-get install -y awscli
 
       - name: 'Terraform Init'
         run: terraform init
@@ -64,10 +58,24 @@ jobs:
       - name: 'Checkout'
         uses: actions/checkout@v2
 
+      - name: 'Install AWS CLI'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y awscli
+
       - name: 'Setup Python'
         uses: actions/setup-python@v2
         with:
           python-version: '3.x'
+
+      - name: 'Install Poetry'
+        run: |
+          pip install poetry
+      
+      - name: 'Install shared'
+        run: |
+          cd libs/petshop_support
+          poetry install
 
       - name: 'Deploy'
         run: make fn_deploy_all
@@ -75,4 +83,3 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: "eu-west-1"
-        

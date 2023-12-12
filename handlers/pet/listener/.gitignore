@@ -3,5 +3,4 @@
 .venv
 dist
 package
-src
 *.zip
