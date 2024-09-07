@@ -11,3 +11,4 @@ handlers/get_tags/get_tags.zip
 terraform/lambdas/plan.out
 terraform/lambdas/zip_files/*.zip
 terraform/rest_open_api/plan.out
+libs/petshop_support/dist/

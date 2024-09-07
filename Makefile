@@ -15,7 +15,6 @@ help:
 	@echo "  infra_create"
 	@echo "  infra_destroy"
 	@echo "  fn_build resource=<resource> name=<name>"
-	@echo "  fn_upload resource=<resource> name=<name>"
 	@echo "  fn_zip resource=<resource> name=<name>"
 	@echo "  fn_test resource=<resource> name=<name>"
 	@echo "  fn_clean resource=<resource> name=<name>"
@@ -48,6 +47,7 @@ infra_destroy:
 fn_build:
 	cd "handlers/${resource}/${name}" && \
 	rm -rf ${package_dir} && \
+	poetry env use 3.11.8 && \
 	poetry config virtualenvs.in-project true && \
     poetry install && \
 	mkdir -p ${package_dir} && \
@@ -55,13 +55,6 @@ fn_build:
     poetry run pip install --no-deps --upgrade --cache-dir ./.pip_cache --requirement ${package_dir}/requirements.txt --target package && \
     cp -R src ${package_dir}
 .PHONY: fn_build
-
-fn_upload:
-	cd "handlers/${resource}/${name}" && \
-	aws s3 cp "${name}_${resource}.zip" s3://${s3_bucket} && \
-	aws lambda update-function-code --function-name "${project}_${name}_${resource}" \
-	--s3-bucket ${s3_bucket} --s3-key "${name}_${resource}.zip" > /dev/null
-.PHONY: fn_upload
 
 fn_layer_zip:
 	cd "handlers/${resource}/${name}" && \
@@ -122,15 +115,23 @@ fn_clean:
 	rm -rf ./*.zip && \
 	rm -rf ./__pycache__
 
-fn_deploy: fn_build fn_zip fn_upload
-.PHONY: fn_deploy
-
 fn_deploy_mini: fn_build fn_zip_mini fn_layer_zip fn_layer_upload fn_upload_mini fn_layer_apply
 .PHONY: fn_deploy_mini
+
+libs_clean:
+	rm -rf libs/petshop_support
 
 #########################################
 # Aggregate
 #########################################
+
+fn_build_all:
+	$(MAKE) fn_build resource=pet name=create
+	$(MAKE) fn_build resource=pet name=delete
+	$(MAKE) fn_build resource=pet name=get
+	$(MAKE) fn_build resource=pet name=index
+	$(MAKE) fn_build resource=pet name=listener
+	$(MAKE) fn_build resource=pet name=update
 
 fn_deploy_all:
 	$(MAKE) fn_deploy_mini resource=pet name=create
@@ -140,3 +141,12 @@ fn_deploy_all:
 	$(MAKE) fn_deploy_mini resource=pet name=listener
 	$(MAKE) fn_deploy_mini resource=pet name=update
 .PHONY: fn_deploy_all
+
+fn_clean_all:
+	$(MAKE) fn_clean resource=pet name=create
+	$(MAKE) fn_clean resource=pet name=delete
+	$(MAKE) fn_clean resource=pet name=get
+	$(MAKE) fn_clean resource=pet name=index
+	$(MAKE) fn_clean resource=pet name=listener
+	$(MAKE) fn_clean resource=pet name=update
+.PHONY: fn_clean_all
