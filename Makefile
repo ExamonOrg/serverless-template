@@ -44,6 +44,14 @@ infra_destroy:
 # Lambdas
 #########################################
 
+build_libs:
+	cd "libs/petshop_support" && \
+	poetry env use 3.11.8 && \
+	poetry config virtualenvs.in-project true && \
+	poetry install && \
+	poetry build
+.PHONY: fn_build_libs
+
 fn_build:
 	cd "handlers/${resource}/${name}" && \
 	rm -rf ${package_dir} && \
@@ -150,3 +158,9 @@ fn_clean_all:
 	$(MAKE) fn_clean resource=pet name=listener
 	$(MAKE) fn_clean resource=pet name=update
 .PHONY: fn_clean_all
+
+#########################################
+# Main
+#########################################
+
+all: build_libs fn_build_all

@@ -124,6 +124,20 @@ files = [
 ]
 
 [[package]]
+name = "petshop-support"
+version = "0.1.0"
+description = ""
+optional = false
+python-versions = "3.11.8"
+files = [
+    {file = "petshop_support-0.1.0.tar.gz", hash = "sha256:35f04d67b9c239d7b40c3f6687ef2f25cd04a7a6d714f7a1f66b803fbdf14de3"},
+]
+
+[package.source]
+type = "file"
+url = "../../../libs/petshop_support/dist/petshop_support-0.1.0.tar.gz"
+
+[[package]]
 name = "pluggy"
 version = "1.5.0"
 description = "plugin and hook calling mechanisms for python"
@@ -310,4 +324,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "3.11.8"
-content-hash = "e928e0e886301114838abebc819f793931c95c63a2d121255a2977a653529571"
+content-hash = "0e93d6a236863857aa848861e1ec1ee430e090d4eb3a1fc8e9f30a1d4eb8532e"

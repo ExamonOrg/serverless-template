@@ -1,4 +1,4 @@
-cd terraform/site
+cd ../terraform/site
 
 INVOKE_URL=$(terraform output -raw invoke_url)
 

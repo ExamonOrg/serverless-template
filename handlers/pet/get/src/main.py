@@ -4,6 +4,7 @@ from aws_lambda_powertools import Metrics
 from aws_lambda_powertools.utilities.typing import LambdaContext
 from aws_lambda_powertools import Tracer
 from aws_lambda_powertools import Logger
+from petshop_support.const import AWS_REGION
 
 logger = Logger()
 metrics = Metrics(namespace="pet.get")
@@ -21,7 +22,7 @@ region = 'eu-west-1'
 @metrics.log_metrics(capture_cold_start_metric=True)
 def lambda_handler(event: dict, context: LambdaContext):
     try:
-        dynamodb = boto3.resource('dynamodb', region_name=region)
+        dynamodb = boto3.resource('dynamodb', region_name=AWS_REGION)
         table = dynamodb.Table('pets')
         pet_uuid = event['pathParameters']['id']
         logger.info(f"Getting pet: {pet_uuid}")

@@ -3,6 +3,8 @@ import re
 
 import boto3
 
+from petshop_support.const import AWS_REGION
+
 from aws_lambda_powertools import Metrics
 from aws_lambda_powertools.metrics import MetricUnit
 from aws_lambda_powertools.utilities.typing import LambdaContext
@@ -25,9 +27,9 @@ region = 'eu-west-1'
 @metrics.log_metrics(capture_cold_start_metric=True)
 def lambda_handler(event: dict, context: LambdaContext):
     try:
-        dynamodb = boto3.resource('dynamodb', region_name=region)
+        dynamodb = boto3.resource('dynamodb', region_name=AWS_REGION)
         table = dynamodb.Table('pets')
-        response = table.scan(AttributesToGet=[ 'pet_uuid', 'name', 'breed'])
+        response = table.scan(AttributesToGet=['pet_uuid', 'name', 'breed'])
         logger.info(f"Getting all pets, found {len(response['Items'])}")
         return {
             "statusCode": 200,
