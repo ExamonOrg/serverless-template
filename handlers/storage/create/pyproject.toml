@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "petshop-get-pets"
+name = "petshop-create-pet"
 version = "1.0.0"
 description = "Petshop Handler"
 authors = ["Jarrod Folino <jdfolino@icloud.com>"]
@@ -10,7 +10,8 @@ python = "3.11.8"
 aws-lambda-powertools = {extras = ["aws-sdk"], version = "^2.25.1"}
 aws-xray-sdk = "^2.12.0"
 boto3 = "^1.28.64"
-petshop-support = {path = "../../../libs/petshop_support/dist/petshop_support-0.1.0.tar.gz"}
+mirror_storage-support = {path = "../../../libs/mirror_storage_support/dist/mirror_storage_support-0.1.0.tar.gz"}
+requests = "^2.31.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.2.0"

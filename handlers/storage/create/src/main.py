@@ -1,21 +1,23 @@
 import json
-from uuid import uuid4
 
 import boto3
-
-from petshop_support.const import AWS_REGION
+from boto3.dynamodb.types import TypeSerializer
+from mirror_storage_support.const import AWS_REGION
 
 
 def lambda_handler(event: dict, context):
     try:
         dynamodb = boto3.resource("dynamodb", region_name=AWS_REGION)
-        table = dynamodb.Table("pets")
-        pet_uuid = uuid4()
+        table = dynamodb.Table("mirror_storage")
+        body = json.loads(event["body"])
+        print("body")
+        print(body)
+        object_value = body["object_value"]
+        serializer = TypeSerializer()
+        serialized_object_value = serializer.serialize(object_value)
         payload = {
-            "pet_uuid": str(pet_uuid),
-            "name": "Name",
-            "breed": "Breed",
-            "age": 3,
+            "object_name": event["pathParameters"]["id"],
+            "object_value": serialized_object_value,
         }
         response = table.put_item(Item=payload)
         status_code = response["ResponseMetadata"]["HTTPStatusCode"]

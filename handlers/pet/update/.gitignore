@@ -1,6 +1,0 @@
-.idea
-.pip_cache
-.venv
-dist
-package
-*.zip

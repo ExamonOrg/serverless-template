@@ -1,10 +1,10 @@
 [tool.poetry]
-name = "petshop_support"
+name = "mirror_storage_support"
 version = "0.1.0"
 description = ""
 authors = ["Jarrod Folino <jarrod.folino@fundingcircle.com>"]
 readme = "README.md"
-packages = [{ include = "petshop_support" }]
+packages = [{ include = "mirror_storage_support" }]
 
 [tool.poetry.dependencies]
 python = "3.11.8"
