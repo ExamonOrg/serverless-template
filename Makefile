@@ -1,5 +1,5 @@
-s3_bucket := examon-lambdas
-project := petshop
+s3_bucket := examon-mirror-storage-lambdas
+project := storage_mirror
 package_dir := package
 region := eu-west-1
 account_id := 478119378221
@@ -45,7 +45,7 @@ infra_destroy:
 #########################################
 
 build_libs:
-	cd "libs/petshop_support" && \
+	cd "libs/mirror_storage_support" && \
 	poetry env use 3.11.8 && \
 	poetry config virtualenvs.in-project true && \
 	poetry install && \
@@ -107,7 +107,14 @@ fn_upload_mini:
 	aws s3 cp "${name}_${resource}_mini.zip" s3://${s3_bucket} && \
 	aws lambda update-function-code --function-name "${project}_${name}_${resource}" \
 	--s3-bucket ${s3_bucket} --s3-key "${name}_${resource}_mini.zip" > /dev/null
-.PHONY: fn_upload
+.PHONY: fn_upload_mini
+
+fn_upload:
+	cd "handlers/${resource}/${name}" && \
+	aws s3 cp "${name}_${resource}.zip" s3://${s3_bucket} && \
+	aws lambda update-function-code --function-name "${project}_${name}_${resource}" \
+	--s3-bucket ${s3_bucket} --s3-key "${name}_${resource}.zip" > /dev/null
+.PHONY: fn_upload_mini
 
 fn_test:
 	cd "handlers/${resource}/${name}" && \
@@ -123,7 +130,7 @@ fn_clean:
 	rm -rf ./*.zip && \
 	rm -rf ./__pycache__
 
-fn_deploy_mini: fn_build fn_zip_mini fn_layer_zip fn_layer_upload fn_upload_mini fn_layer_apply
+fn_deploy: fn_build fn_zip fn_upload
 .PHONY: fn_deploy_mini
 
 libs_clean:
@@ -134,29 +141,17 @@ libs_clean:
 #########################################
 
 fn_build_all:
-	$(MAKE) fn_build resource=pet name=create
-	$(MAKE) fn_build resource=pet name=delete
-	$(MAKE) fn_build resource=pet name=get
-	$(MAKE) fn_build resource=pet name=index
-	$(MAKE) fn_build resource=pet name=listener
-	$(MAKE) fn_build resource=pet name=update
+	$(MAKE) fn_build resource=storage name=create
+	$(MAKE) fn_build resource=storage name=get
 
 fn_deploy_all:
-	$(MAKE) fn_deploy_mini resource=pet name=create
-	$(MAKE) fn_deploy_mini resource=pet name=delete
-	$(MAKE) fn_deploy_mini resource=pet name=get
-	$(MAKE) fn_deploy_mini resource=pet name=index
-	$(MAKE) fn_deploy_mini resource=pet name=listener
-	$(MAKE) fn_deploy_mini resource=pet name=update
+	$(MAKE) fn_deploy resource=storage name=create
+	$(MAKE) fn_deploy resource=storage name=get
 .PHONY: fn_deploy_all
 
 fn_clean_all:
-	$(MAKE) fn_clean resource=pet name=create
-	$(MAKE) fn_clean resource=pet name=delete
-	$(MAKE) fn_clean resource=pet name=get
-	$(MAKE) fn_clean resource=pet name=index
-	$(MAKE) fn_clean resource=pet name=listener
-	$(MAKE) fn_clean resource=pet name=update
+	$(MAKE) fn_clean resource=storage name=create
+	$(MAKE) fn_clean resource=storage name=get
 .PHONY: fn_clean_all
 
 #########################################
